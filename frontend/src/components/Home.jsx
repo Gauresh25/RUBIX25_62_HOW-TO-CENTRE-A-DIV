@@ -1,19 +1,20 @@
-import { Container } from 'react-bootstrap';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import { Container } from 'react-bootstrap';
 import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Header';
+import Header from './Header';
 
-const App = () => {
+const Home = () => {
   return (
     <>
       <Header />
       <ToastContainer />
-      <Container className='my-2'>
+      <Container className="my-2">
         <Outlet />
       </Container>
     </>
   );
 };
 
-export default App;
+export default Home;
