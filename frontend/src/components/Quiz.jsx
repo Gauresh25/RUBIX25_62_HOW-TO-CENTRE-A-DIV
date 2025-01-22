@@ -1,5 +1,5 @@
 "use client";
-
+import axios from "axios";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { toast } from "react-toastify";
 
 const indianHistoryQuestions = [
 	{
@@ -214,8 +215,28 @@ export default function HistoryQuiz() {
 			setCurrentQuestion(currentQuestion + 1);
 			setSelectedAnswer(null);
 		} else {
+			saveResults();
 			setShowResult(true);
 		}
+	};
+
+	const saveResults = () => {
+		const payload = {};
+		payload.score = score;
+		payload.type = genre;
+		console.log(payload);
+		axios
+			.post("/api/quiz/save", payload)
+			.then((response) => {
+				console.log("Response:", response.data);
+				toast.success(
+					"Huarryyy ! You have successfully completed the quiz ! Check leaderboard"
+				);
+			})
+			.catch((error) => {
+				console.error("Error:", error);
+				toast.error("Something went wrong ! Please try again");
+			});
 	};
 
 	const restartQuiz = () => {
