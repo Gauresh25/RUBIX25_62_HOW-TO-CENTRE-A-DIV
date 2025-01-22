@@ -17,6 +17,7 @@ import RegisterScreen from "./screens/RegisterScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Quiz from "./components/Quiz.jsx";
+import Leaderboard from "./components/Leaderboard.jsx";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
 			<Route path="" element={<PrivateRoute />}>
 				<Route path="/profile" element={<ProfileScreen />} />
 				<Route path="/quiz" element={<Quiz />} />
+				<Route path="/leaderboard" element={<Leaderboard />} />
 			</Route>
 		</Route>
 	)
