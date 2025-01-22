@@ -16,7 +16,10 @@ import LoginScreen from "./screens/LoginScreen.jsx";
 import RegisterScreen from "./screens/RegisterScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
-import Quiz from "./components/Quiz.jsx";
+import Timeline from "./components/Timeline.jsx";
+import MapSlider from "./components/SliderMap.jsx";
+import Chat from "./components/Chat";
+import HistoryQuiz from "./components/Quiz.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
 
 const router = createBrowserRouter(
@@ -25,9 +28,13 @@ const router = createBrowserRouter(
 			<Route index={true} path="/" element={<HomeScreen />} />
 			<Route path="/login" element={<LoginScreen />} />
 			<Route path="/register" element={<RegisterScreen />} />
+			<Route path="/timeline" element={<Timeline />} />
+			<Route path="/mapslider" element={<MapSlider />} />
+			<Route path="/chat" element={<Chat />} />
+
 			<Route path="" element={<PrivateRoute />}>
 				<Route path="/profile" element={<ProfileScreen />} />
-				<Route path="/quiz" element={<Quiz />} />
+				<Route path="/quiz" element={<HistoryQuiz />} />
 				<Route path="/leaderboard" element={<Leaderboard />} />
 			</Route>
 		</Route>
