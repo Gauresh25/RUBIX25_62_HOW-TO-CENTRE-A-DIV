@@ -17,6 +17,8 @@ import RegisterScreen from './screens/RegisterScreen.jsx';
 import ProfileScreen from './screens/ProfileScreen.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
 import Timeline from './components/Timeline.jsx';
+import MapSlider from './components/SliderMap.jsx';
+import Chat from './components/Chat';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +27,8 @@ const router = createBrowserRouter(
       <Route path='/login' element={<LoginScreen />} />
       <Route path='/register' element={<RegisterScreen />} />
       <Route path='/timeline' element={<Timeline />} />
+      <Route path='/mapslider' element={<MapSlider />} />
+      <Route path='/chat' element={<Chat />} />
 
 
       <Route path='' element={<PrivateRoute />}>
