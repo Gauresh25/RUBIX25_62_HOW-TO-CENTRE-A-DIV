@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import {
-	createBrowserRouter,
-	createRoutesFromElements,
-	Route,
-	RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
 } from "react-router-dom";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -21,30 +21,32 @@ import MapSlider from "./components/SliderMap.jsx";
 import Chat from "./components/Chat";
 import HistoryQuiz from "./components/Quiz.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
+import ExpandToGrid from "./components/cards.jsx";
 
 const router = createBrowserRouter(
-	createRoutesFromElements(
-		<Route path="/" element={<App />}>
-			<Route index={true} path="/" element={<HomeScreen />} />
-			<Route path="/login" element={<LoginScreen />} />
-			<Route path="/register" element={<RegisterScreen />} />
-			<Route path="/timeline" element={<Timeline />} />
-			<Route path="/mapslider" element={<MapSlider />} />
-			<Route path="/chat" element={<Chat />} />
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index={true} path="/" element={<HomeScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/timeline" element={<Timeline />} />
+      <Route path="/mapslider" element={<MapSlider />} />
+      <Route path="/chat" element={<Chat />} />
+      <Route path="/changes" element={<ExpandToGrid />} />
 
-			<Route path="" element={<PrivateRoute />}>
-				<Route path="/profile" element={<ProfileScreen />} />
-				<Route path="/quiz" element={<HistoryQuiz />} />
-				<Route path="/leaderboard" element={<Leaderboard />} />
-			</Route>
-		</Route>
-	)
+      <Route path="" element={<PrivateRoute />}>
+        <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/quiz" element={<HistoryQuiz />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
+      </Route>
+    </Route>
+  )
 );
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<Provider store={store}>
-		<React.StrictMode>
-			<RouterProvider router={router} />
-		</React.StrictMode>
-	</Provider>
+  <Provider store={store}>
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  </Provider>
 );

@@ -1,4 +1,3 @@
-// import { Navbar, Nav, Container, NavDropdown, Badge } from 'react-bootstrap';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { FaSignInAlt, FaSignOutAlt } from 'react-icons/fa';
 import { LinkContainer } from 'react-router-bootstrap';
@@ -30,31 +29,60 @@ const Header = () => {
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
         <Container>
           <LinkContainer to='/'>
-
             <Navbar.Brand>
-            <img
-              src="/Logo.png"
-              width="30"
-              height="30"
-              className="d-inline-block align-top me-2"
-              alt="Epochly logo"
-            />
-            Epochly</Navbar.Brand>
+              <img
+                src="/Logo.png"
+                width="30"
+                height="30"
+                className="d-inline-block align-top me-2"
+                alt="Epochly logo"
+              />
+              Epochly
+            </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
+              {/* Add new routes here */}
+              <LinkContainer to='/'>
+                <Nav.Link>Home</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/timeline'>
+                <Nav.Link>Explore Timeline</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/vr-museum'>
+                <Nav.Link>VR Museum</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/chat'>
+                <Nav.Link>Chat with Historical Figures</Nav.Link>
+              </LinkContainer>
+
+              {/* Quizzes & Challenges Dropdown */}
+              <NavDropdown title="Quizzes & Challenges" id="quizzes-challenges-dropdown">
+                <LinkContainer to='/quiz'>
+                  <NavDropdown.Item>Quizzes</NavDropdown.Item>
+                </LinkContainer>
+                <LinkContainer to='/leaderboard'>
+                  <NavDropdown.Item>Leaderboard</NavDropdown.Item>
+                </LinkContainer>
+              </NavDropdown>
+
+              <LinkContainer to='/community-forum'>
+                <Nav.Link>Community Forum</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/about-us'>
+                <Nav.Link>About Us</Nav.Link>
+              </LinkContainer>
+
               {userInfo ? (
-                <>
-                  <NavDropdown title={userInfo.name} id='username'>
-                    <LinkContainer to='/profile'>
-                      <NavDropdown.Item>Profile</NavDropdown.Item>
-                    </LinkContainer>
-                    <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </>
+                <NavDropdown title={userInfo.name} id='username'>
+                  <LinkContainer to='/profile'>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
               ) : (
                 <>
                   <LinkContainer to='/login'>
