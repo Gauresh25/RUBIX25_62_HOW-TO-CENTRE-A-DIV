@@ -21,6 +21,7 @@ import MapSlider from "./components/SliderMap.jsx";
 import Chat from "./components/Chat";
 import HistoryQuiz from "./components/Quiz.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
+import Map from "./components/map/MapsApp.jsx";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
 			<Route path="/timeline" element={<Timeline />} />
 			<Route path="/mapslider" element={<MapSlider />} />
 			<Route path="/chat" element={<Chat />} />
+			<Route path="/map" element={<Map />} />
 
 			<Route path="" element={<PrivateRoute />}>
 				<Route path="/profile" element={<ProfileScreen />} />

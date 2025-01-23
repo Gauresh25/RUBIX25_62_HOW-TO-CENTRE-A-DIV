@@ -30,7 +30,7 @@ const customStyles = `
 `;
 
 const TextCard = ({ title, description, image }) => (
-  <div className="scale-150 origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
+  <div className=" origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
     <img
       src={image || "/api/placeholder/400/300"}
       alt={title}
@@ -66,7 +66,7 @@ const MapCard = ({ title, startYear, endYear, region }) => (
 );
 
 const QuoteCard = ({ quote, author, year }) => (
-  <div className="scale-150 origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2 p-6 bg-sepia-50 rounded-lg">
+  <div className=" origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2 p-6 bg-sepia-50 rounded-lg">
     <blockquote className="text-xl italic text-stone-700 mb-4">"{quote}"</blockquote>
     <p className="text-right text-stone-600">- {author}, {year}</p>
   </div>
