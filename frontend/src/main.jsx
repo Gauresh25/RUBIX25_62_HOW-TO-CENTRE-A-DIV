@@ -21,7 +21,9 @@ import MapSlider from "./components/SliderMap.jsx";
 import Chat from "./components/Chat";
 import HistoryQuiz from "./components/Quiz.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
+import Model3d from "./components/3dmodel.jsx";
 import Map from "./components/map/MapsApp.jsx";
+import { timelineData } from './components/data/timelineData';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -29,10 +31,11 @@ const router = createBrowserRouter(
 			<Route index={true} path="/" element={<HomeScreen />} />
 			<Route path="/login" element={<LoginScreen />} />
 			<Route path="/register" element={<RegisterScreen />} />
-			<Route path="/timeline" element={<Timeline />} />
+			<Route path="/timeline" element={<Timeline timelineData={timelineData} />} />
 			<Route path="/mapslider" element={<MapSlider />} />
 			<Route path="/chat" element={<Chat />} />
 			<Route path="/map" element={<Map />} />
+			<Route path="/3d" element={<Model3d  modelUrl="julius.glb" caption="Julius ceasar"  />} />
 
 			<Route path="" element={<PrivateRoute />}>
 				<Route path="/profile" element={<ProfileScreen />} />

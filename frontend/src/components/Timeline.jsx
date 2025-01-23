@@ -1,12 +1,11 @@
-import React from 'react';
+// Timeline.jsx
+import React, { Suspense } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { BookOpen, Navigation, Rocket, BookOpenCheck, Flame, PenTool, Map } from 'lucide-react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const MapSlider = React.lazy(() => import('./SliderMap'));
+const ThreeViewer = React.lazy(() => import('./3dmodel'));
 
-// Minimal required custom styles
 const customStyles = `
   .vertical-timeline::before {
     background: #8B4513 !important;
@@ -30,7 +29,7 @@ const customStyles = `
 `;
 
 const TextCard = ({ title, description, image }) => (
-  <div className=" origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
+  <div className="origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
     <img
       src={image || "/api/placeholder/400/300"}
       alt={title}
@@ -41,90 +40,40 @@ const TextCard = ({ title, description, image }) => (
   </div>
 );
 
+const ThreeDCard = ({ title, modelUrl, caption }) => (
+  <div className="origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
+    <Suspense fallback={<div className="w-full h-96 bg-gray-100 animate-pulse rounded-lg"/>}>
+      <ThreeViewer modelUrl={modelUrl} caption={caption} />
+    </Suspense>
+  </div>
+);
+
 const MapCard = ({ title, startYear, endYear, region }) => (
   <div className="scale-200 origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2 border-2 border-[#8B4513] rounded-lg overflow-hidden p-4">
     <div className="flex items-center justify-between mb-4">
       <h3 className="text-2xl font-koulen text-[#8B4513]">{title}</h3>
-      <div className="flex items-center gap-4">
-        <ChevronLeft 
-          className="w-6 h-6 cursor-pointer text-gray-600 hover:text-gray-900"
-        />
-        <span className="font-bold">{startYear}</span>
-        <ChevronRight 
-          className="w-6 h-6 cursor-pointer text-gray-600 hover:text-gray-900"
-        />
-      </div>
+      <span className="font-bold">{startYear}</span>
     </div>
-    <React.Suspense fallback={<div className="w-full h-64 bg-gray-100 animate-pulse rounded-lg"/>}>
-      <MapSlider
-        startYear={startYear}
-        endYear={endYear}
-        region={region}
-      />
-    </React.Suspense>
+    <Suspense fallback={<div className="w-full h-64 bg-gray-100 animate-pulse rounded-lg"/>}>
+      <MapSlider startYear={startYear} endYear={endYear} region={region} />
+    </Suspense>
   </div>
 );
 
 const QuoteCard = ({ quote, author, year }) => (
-  <div className=" origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2 p-6 bg-sepia-50 rounded-lg">
+  <div className="origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2 p-6 bg-sepia-50 rounded-lg">
     <blockquote className="text-xl italic text-stone-700 mb-4">"{quote}"</blockquote>
     <p className="text-right text-stone-600">- {author}, {year}</p>
   </div>
 );
 
-const Timeline = () => {
-  const events = [
-    {
-      year: 1440,
-      type: 'text',
-      content: {
-        title: "Printing Press Invented",
-        description: "Johannes Gutenberg invents the movable-type printing press, revolutionizing the spread of information in Europe.",
-        image: "/api/placeholder/400/300"
-      },
-      icon: <PenTool />,
-      iconBg: "#8B4513"
-    },
-    {
-      year: "1939-1945",
-      type: 'map',
-      content: {
-        title: "World War II in Europe",
-        startYear: 1939,
-        endYear: 1945,
-        region: "europe"
-      },
-      icon: <Map />,
-      iconBg: "#8B4513"
-    },
-    {
-      year: 1863,
-      type: 'quote',
-      content: {
-        quote: "Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.",
-        author: "Abraham Lincoln",
-        year: 1863
-      },
-      icon: <BookOpen />,
-      iconBg: "#8B4513"
-    },
-    {
-      year: 1969,
-      type: 'text',
-      content: {
-        title: "Moon Landing",
-        description: "NASA's Apollo 11 mission successfully lands humans on the Moon for the first time.",
-        image: "/api/placeholder/400/300"
-      },
-      icon: <Rocket />,
-      iconBg: "#8B4513"
-    }
-  ];
-
+const Timeline = ({ timelineData }) => {
   const renderContent = (event) => {
     switch (event.type) {
       case 'text':
         return <TextCard {...event.content} />;
+      case '3d':
+        return <ThreeDCard {...event.content} />;
       case 'map':
         return <MapCard {...event.content} />;
       case 'quote':
@@ -137,16 +86,13 @@ const Timeline = () => {
   return (
     <div className="min-h-screen bg-[#F5F5DC]">
       <style>{customStyles}</style>
-      
       <h1 className="text-4xl text-center pt-12 pb-16 text-[#8B4513] font-koulen">
         Interactive Historical Timeline
       </h1>
-      
-      <VerticalTimeline lineColor="#8B4513" >
-        {events.map((event) => (
+      <VerticalTimeline lineColor="#8B4513">
+        {timelineData.map((event) => (
           <VerticalTimelineElement
             key={event.year}
-            className="vertical-timeline-element"
             date={event.year}
             dateClassName="text-[#8B4513] font-koulen text-xl"
             contentStyle={{ 
@@ -155,14 +101,7 @@ const Timeline = () => {
               border: '1px solid #8B4513',
               fontFamily: 'Koulen, sans-serif'
             }}
-            contentArrowStyle={{ 
-              borderRight: '7px solid #8B4513' 
-            }}
-            iconStyle={{ 
-              background: event.iconBg,
-              color: '#fff'
-            }}
-            icon={event.icon}
+            contentArrowStyle={{ borderRight: '7px solid #8B4513' }}
           >
             {renderContent(event)}
           </VerticalTimelineElement>
