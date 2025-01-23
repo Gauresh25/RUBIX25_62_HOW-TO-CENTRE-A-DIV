@@ -12,9 +12,9 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import quizRoutes from "./routes/quizRoutes.js";
 import axios from "axios";
+import timelineRoutes from "./routes/timelineRoutes.js";
 
 const port = process.env.PORT || 5000;
-
 connectDB();
 
 const app = express();
@@ -24,8 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+app.use(express.json());
+app.use(cors());
+
 app.use("/api/users", userRoutes);
 app.use("/api/quiz", quizRoutes);
+app.use('/api/timelines', timelineRoutes);
 
 if (process.env.NODE_ENV === "production") {
   const __dirname = path.resolve();
@@ -40,8 +44,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.use(express.json());
-app.use(cors());
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 console.log(process.env.GOOGLE_API_KEY);

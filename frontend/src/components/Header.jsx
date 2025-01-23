@@ -53,10 +53,6 @@ const Header = () => {
               <LinkContainer to='/vr-museum'>
                 <Nav.Link>VR Museum</Nav.Link>
               </LinkContainer>
-              <LinkContainer to='/chat'>
-                <Nav.Link>Chat with Historical Figures</Nav.Link>
-              </LinkContainer>
-
               {/* Quizzes & Challenges Dropdown */}
               <NavDropdown title="Quizzes & Challenges" id="quizzes-challenges-dropdown">
                 <LinkContainer to='/quiz'>
@@ -66,14 +62,6 @@ const Header = () => {
                   <NavDropdown.Item>Leaderboard</NavDropdown.Item>
                 </LinkContainer>
               </NavDropdown>
-
-              <LinkContainer to='/community-forum'>
-                <Nav.Link>Community Forum</Nav.Link>
-              </LinkContainer>
-              <LinkContainer to='/about-us'>
-                <Nav.Link>About Us</Nav.Link>
-              </LinkContainer>
-
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id='username'>
                   <LinkContainer to='/profile'>

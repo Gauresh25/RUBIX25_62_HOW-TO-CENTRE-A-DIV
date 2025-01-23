@@ -7,13 +7,15 @@ export default defineConfig({
 	plugins: [react()],
 	server: {
 		port: 3000,
+		https: false,
+		host: true, // Enable network access
 		proxy: {
-			"/api": {
-				target: "http://localhost:5000",
-				changeOrigin: true,
-			},
+		  "/api": {
+			target: "http://localhost:5000",
+			changeOrigin: true,
+		  },
 		},
-	},
+	  },
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),

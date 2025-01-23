@@ -154,22 +154,10 @@ const Hero = () => {
       >
         Scroll Down
       </button>
-
-      {/* "On This Day Today" Section */}
-      <div
-        ref={onThisDayRef}
-        className="bg-blue-100 text-blue-900 p-6 rounded-lg shadow-md mb-6 mx-6"
-      >
-        <h2 className="text-3xl font-bold mb-2">On This Day Today</h2>
-        <p className="text-lg">
-          Discover remarkable events, notable birthdays, and historical
-          milestones that happened on this day in history.
-        </p>
-      </div>
       {/* "On This Day Today" Section */}
       <div
         // ref={onThisDayRef}
-        className="bg-blue-100 text-blue-900 p-6 rounded-lg shadow-md mb-6 mx-6"
+        className="bg-blue-100 my-28 text-blue-900 p-6 rounded-lg shadow-md mb-6 mx-6"
       >
         <h2 className="text-3xl font-bold mb-2">On This Day Today</h2>
         <p className="text-lg">

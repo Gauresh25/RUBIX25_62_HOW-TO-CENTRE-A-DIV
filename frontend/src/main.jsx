@@ -17,22 +17,29 @@ import RegisterScreen from "./screens/RegisterScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Timeline from "./components/Timeline.jsx";
+import TimelineSelection from "./components/TimelineSelection.jsx";
 import MapSlider from "./components/SliderMap.jsx";
 import Chat from "./components/Chat";
 import HistoryQuiz from "./components/Quiz.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
-import ExpandToGrid from "./components/cards.jsx";
+import Model3d from "./components/3dmodel.jsx";
+import Map from "./components/map/MapsApp.jsx";
+import { timelineData } from './components/data/timelineData';
 
 const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route index={true} path="/" element={<HomeScreen />} />
-      <Route path="/login" element={<LoginScreen />} />
-      <Route path="/register" element={<RegisterScreen />} />
-      <Route path="/timeline" element={<Timeline />} />
-      <Route path="/mapslider" element={<MapSlider />} />
-      <Route path="/chat" element={<Chat />} />
-      <Route path="/changes" element={<ExpandToGrid />} />
+	createRoutesFromElements(
+		<Route path="/" element={<App />}>
+			<Route index={true} path="/" element={<HomeScreen />} />
+			<Route path="/login" element={<LoginScreen />} />
+			<Route path="/register" element={<RegisterScreen />} />
+			<Route path="/timeline" element={<TimelineSelection />} />
+			<Route path="/mapslider" element={<MapSlider />} />
+			<Route path="/chat" element={<Chat isOpen="true"
+        characterName="Rani Lakshmibai"
+        characterImage="RaniLakshmi.png"
+        apiEndpoint="http://localhost:5000/chat"/>} />
+			<Route path="/map" element={<Map />} />
+			<Route path="/3d" element={<Model3d  modelUrl="julius.glb" caption="Julius ceasar"  />} />
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<ProfileScreen />} />
