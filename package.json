@@ -23,7 +23,8 @@
     "gsap": "^3.12.7",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.0",
-    "openai": "^4.80.0"
+    "openai": "^4.80.0",
+    "qrcode.react": "^4.2.0"
   },
   "devDependencies": {
     "concurrently": "^8.0.1",

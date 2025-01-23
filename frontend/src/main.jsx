@@ -24,22 +24,34 @@ import HistoryQuiz from "./components/Quiz.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
 import Model3d from "./components/3dmodel.jsx";
 import Map from "./components/map/MapsApp.jsx";
-import { timelineData } from './components/data/timelineData';
+import { timelineData } from "./components/data/timelineData";
+import VRMuseumQRCode from "./components/qr.jsx";
 
 const router = createBrowserRouter(
-	createRoutesFromElements(
-		<Route path="/" element={<App />}>
-			<Route index={true} path="/" element={<HomeScreen />} />
-			<Route path="/login" element={<LoginScreen />} />
-			<Route path="/register" element={<RegisterScreen />} />
-			<Route path="/timeline" element={<TimelineSelection />} />
-			<Route path="/mapslider" element={<MapSlider />} />
-			<Route path="/chat" element={<Chat isOpen="true"
-        characterName="Rani Lakshmibai"
-        characterImage="RaniLakshmi.png"
-        apiEndpoint="http://localhost:5000/chat"/>} />
-			<Route path="/map" element={<Map />} />
-			<Route path="/3d" element={<Model3d  modelUrl="julius.glb" caption="Julius ceasar"  />} />
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index={true} path="/" element={<HomeScreen />} />
+      <Route path="/login" element={<LoginScreen />} />
+      <Route path="/register" element={<RegisterScreen />} />
+      <Route path="/timeline" element={<TimelineSelection />} />
+      <Route path="/mapslider" element={<MapSlider />} />
+      <Route path="/vr-museum" element={<VRMuseumQRCode />} />
+      <Route
+        path="/chat"
+        element={
+          <Chat
+            isOpen="true"
+            characterName="Rani Lakshmibai"
+            characterImage="RaniLakshmi.png"
+            apiEndpoint="http://localhost:5000/chat"
+          />
+        }
+      />
+      <Route path="/map" element={<Map />} />
+      <Route
+        path="/3d"
+        element={<Model3d modelUrl="julius.glb" caption="Julius ceasar" />}
+      />
 
       <Route path="" element={<PrivateRoute />}>
         <Route path="/profile" element={<ProfileScreen />} />
