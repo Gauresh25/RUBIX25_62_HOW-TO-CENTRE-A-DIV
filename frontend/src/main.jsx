@@ -17,6 +17,7 @@ import RegisterScreen from "./screens/RegisterScreen.jsx";
 import ProfileScreen from "./screens/ProfileScreen.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Timeline from "./components/Timeline.jsx";
+import TimelineSelection from "./components/TimelineSelection.jsx";
 import MapSlider from "./components/SliderMap.jsx";
 import Chat from "./components/Chat";
 import HistoryQuiz from "./components/Quiz.jsx";
@@ -31,7 +32,7 @@ const router = createBrowserRouter(
 			<Route index={true} path="/" element={<HomeScreen />} />
 			<Route path="/login" element={<LoginScreen />} />
 			<Route path="/register" element={<RegisterScreen />} />
-			<Route path="/timeline" element={<Timeline timelineData={timelineData} />} />
+			<Route path="/timeline" element={<TimelineSelection />} />
 			<Route path="/mapslider" element={<MapSlider />} />
 			<Route path="/chat" element={<Chat />} />
 			<Route path="/map" element={<Map />} />
