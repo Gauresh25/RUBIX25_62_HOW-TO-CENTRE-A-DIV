@@ -14,6 +14,26 @@ const timelineSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  // Add historical character information
+  historicalCharacter: {
+    name: {
+      type: String,
+      required: true
+    },
+    image: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    // Store any predefined responses or knowledge base for the chat
+    chatContext: {
+      type: [String],
+      default: []
+    }
+  },
   timelineData: [{
     year: {
       type: String,

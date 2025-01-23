@@ -34,7 +34,10 @@ const router = createBrowserRouter(
 			<Route path="/register" element={<RegisterScreen />} />
 			<Route path="/timeline" element={<TimelineSelection />} />
 			<Route path="/mapslider" element={<MapSlider />} />
-			<Route path="/chat" element={<Chat />} />
+			<Route path="/chat" element={<Chat isOpen="true"
+        characterName="Rani Lakshmibai"
+        characterImage="RaniLakshmi.png"
+        apiEndpoint="http://localhost:5000/chat"/>} />
 			<Route path="/map" element={<Map />} />
 			<Route path="/3d" element={<Model3d  modelUrl="julius.glb" caption="Julius ceasar"  />} />
 

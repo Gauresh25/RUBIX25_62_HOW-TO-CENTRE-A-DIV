@@ -1,105 +1,87 @@
-import React, { useState, useCallback } from 'react';
-import { Volume2, VolumeX, Pause } from 'lucide-react';
+// TextToSpeech.jsx
+import React, { useState, useEffect } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
 
-const TextToSpeech = ({ text, className = '' }) => {
+const TextToSpeech = ({ 
+  text, 
+  className = '',
+  voiceGender = 'female',
+  voiceLang = 'en-US'
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  
-  // Store utterance in ref to access across state updates
-  const utteranceRef = React.useRef(null);
-  
-  const stopSpeaking = useCallback(() => {
-    window.speechSynthesis.cancel();
-    setIsPlaying(false);
-    setIsPaused(false);
-  }, []);
+  const [selectedVoice, setSelectedVoice] = useState(null);
 
-  const pauseSpeaking = useCallback(() => {
-    window.speechSynthesis.pause();
-    setIsPaused(true);
-  }, []);
+  useEffect(() => {
+    const setVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      
+      // Common female voice identifiers
+      const femaleIdentifiers = ['female', 'woman', 'girl', 'samantha', 'victoria', 'karen', 'moira', 'tessa'];
+      
+      // Try to find a female voice using various indicators
+      const preferredVoice = voices.find(voice => {
+        const voiceName = voice.name.toLowerCase();
+        return voice.lang.includes(voiceLang) && 
+               femaleIdentifiers.some(identifier => voiceName.includes(identifier));
+      });
 
-  const resumeSpeaking = useCallback(() => {
-    window.speechSynthesis.resume();
-    setIsPaused(false);
-  }, []);
+      // If no specific female voice found, try Microsoft voices which are usually clearer
+      const microsoftFemaleVoice = voices.find(voice => 
+        voice.name.toLowerCase().includes('microsoft') && 
+        femaleIdentifiers.some(identifier => voice.name.toLowerCase().includes(identifier))
+      );
 
-  const startSpeaking = useCallback(() => {
-    // Create new utterance
-    const utterance = new SpeechSynthesisUtterance(text);
-    utteranceRef.current = utterance;
-
-    // Configure utterance
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    utterance.volume = 1;
-
-    // Handle end of speech
-    utterance.onend = () => {
-      setIsPlaying(false);
-      setIsPaused(false);
+      // Set the voice with fallback options
+      setSelectedVoice(preferredVoice || microsoftFemaleVoice || voices.find(v => v.lang.includes(voiceLang)));
     };
 
-    // Handle errors
-    utterance.onerror = (event) => {
-      console.error('Speech synthesis error:', event);
-      setIsPlaying(false);
-      setIsPaused(false);
-    };
+    // Initial setup
+    setVoice();
 
-    // Start speaking
-    setIsPlaying(true);
-    window.speechSynthesis.speak(utterance);
-  }, [text]);
+    // Setup for Chrome
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = setVoice;
+    }
+  }, [voiceLang]);
 
-  const handleClick = () => {
-    if (isPlaying) {
-      if (isPaused) {
-        resumeSpeaking();
-      } else {
-        pauseSpeaking();
+  const speak = () => {
+    if (!isPlaying) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
       }
+
+      // Adjust pitch and rate for more feminine voice characteristics
+      utterance.pitch = 1.2;  // Slightly higher pitch
+      utterance.rate = 0.95;  // Slightly slower rate
+      
+      utterance.onend = () => setIsPlaying(false);
+      utterance.onerror = () => setIsPlaying(false);
+      
+      setIsPlaying(true);
+      window.speechSynthesis.speak(utterance);
     } else {
-      startSpeaking();
+      window.speechSynthesis.cancel();
+      setIsPlaying(false);
     }
   };
 
-  // Clean up on unmount
-  React.useEffect(() => {
-    return () => {
-      if (utteranceRef.current) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
+  // Debug voice selection - you can remove this after testing
+  useEffect(() => {
+    if (selectedVoice) {
+      console.log('Selected voice:', selectedVoice.name);
+    }
+  }, [selectedVoice]);
 
-  const buttonBaseClasses = 'p-2 rounded-full transition-colors duration-200 ' + className;
-  
   return (
-    <div className="flex items-center gap-2">
-      <button
-        onClick={handleClick}
-        className={`${buttonBaseClasses} ${
-          isPlaying ? 'bg-[#8B4513] text-white' : 'bg-gray-200 hover:bg-gray-300'
-        }`}
-        aria-label={isPlaying ? (isPaused ? "Resume speaking" : "Pause speaking") : "Start speaking"}
-      >
-        {isPlaying ? (
-          isPaused ? <Volume2 size={20} /> : <Pause size={20} />
-        ) : (
-          <Volume2 size={20} />
-        )}
-      </button>
-      {isPlaying && (
-        <button
-          onClick={stopSpeaking}
-          className={`${buttonBaseClasses} bg-red-500 hover:bg-red-600 text-white`}
-          aria-label="Stop speaking"
-        >
-          <VolumeX size={20} />
-        </button>
-      )}
-    </div>
+    <button
+      onClick={speak}
+      className={`p-2 rounded-full bg-[#8B4513] text-white hover:bg-[#734011] transition-colors duration-200 ${className}`}
+      aria-label={isPlaying ? "Stop speaking" : "Start speaking"}
+    >
+      {isPlaying ? <VolumeX className="text-black" size={20} /> : <Volume2 className="text-black" size={20} />}
+    </button>
   );
 };
 

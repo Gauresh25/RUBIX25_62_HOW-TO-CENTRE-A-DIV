@@ -3,6 +3,7 @@ import React, { Suspense } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import TextToSpeech from './TextToSpeech';
+import Chat from "./Chat";
 
 const MapSlider = React.lazy(() => import('./SliderMap'));
 const ThreeViewer = React.lazy(() => import('./3dmodel'));
@@ -38,7 +39,11 @@ const TextCard = ({ title, description, image }) => (
     />
     <div className="flex items-center justify-between mb-2">
       <h3 className="text-2xl font-koulen text-[#8B4513]">{title}</h3>
-      <TextToSpeech text={`${title}. ${description}`} />
+      <TextToSpeech 
+        text={`${title}. ${description}`}
+        voiceGender="female"
+        voiceLang="en-US"
+      />
     </div>
     <p className="text-stone-700" style={{ fontFamily: 'system-ui' }}>{description}</p>
   </div>
@@ -71,7 +76,7 @@ const QuoteCard = ({ quote, author, year }) => (
   </div>
 );
 
-const Timeline = ({ timelineData }) => {
+const Timeline = ({ timelineData,historicalCharacter  }) => {
   const renderContent = (event) => {
     switch (event.type) {
       case 'text':
@@ -111,6 +116,15 @@ const Timeline = ({ timelineData }) => {
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>
+      {historicalCharacter && (
+        <Chat 
+          isOpen={true}
+          characterName={historicalCharacter.name}
+          characterImage={historicalCharacter.image}
+          apiEndpoint="http://localhost:5000/chat"
+          className="fixed bottom-4 right-4 z-50"
+        />
+      )}
     </div>
   );
 };
