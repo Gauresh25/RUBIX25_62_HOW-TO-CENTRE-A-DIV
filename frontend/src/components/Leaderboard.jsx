@@ -12,6 +12,14 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
+import {
+	WhatsappShareButton,
+	WhatsappIcon,
+	TwitterIcon,
+	TwitterShareButton,
+	FacebookIcon,
+	FacebookShareButton,
+} from "react-share";
 
 const LeaderboardTable = ({ data }) => (
 	<Table>
@@ -91,6 +99,30 @@ export default function Leaderboard() {
 					<CardTitle className="text-2xl font-bold text-center">
 						History quiz Leaderboard
 					</CardTitle>
+					<div className="flex justify-center items-center gap-2 ">
+						<div>Share on social media </div>
+						<WhatsappShareButton url="http://localhost:3000/leaderboard">
+							<WhatsappIcon
+								size="30"
+								logoFillColor="white"
+								round={true}
+							></WhatsappIcon>
+						</WhatsappShareButton>
+						<FacebookShareButton url="http://localhost:3000/leaderboard">
+							<FacebookIcon
+								size="30"
+								logoFillColor="white"
+								round={true}
+							></FacebookIcon>
+						</FacebookShareButton>
+						<TwitterShareButton url="http://localhost:3000/leaderboard">
+							<TwitterIcon
+								size="30"
+								logoFillColor="white"
+								round={true}
+							></TwitterIcon>
+						</TwitterShareButton>
+					</div>
 				</CardHeader>
 				<CardContent>
 					<Tabs
