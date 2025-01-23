@@ -2,6 +2,7 @@
 import React, { Suspense } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+import TextToSpeech from './TextToSpeech';
 
 const MapSlider = React.lazy(() => import('./SliderMap'));
 const ThreeViewer = React.lazy(() => import('./3dmodel'));
@@ -35,7 +36,10 @@ const TextCard = ({ title, description, image }) => (
       alt={title}
       className="w-full h-56 object-cover rounded-lg mb-4"
     />
-    <h3 className="text-2xl font-koulen mb-2 text-[#8B4513]">{title}</h3>
+    <div className="flex items-center justify-between mb-2">
+      <h3 className="text-2xl font-koulen text-[#8B4513]">{title}</h3>
+      <TextToSpeech text={`${title}. ${description}`} />
+    </div>
     <p className="text-stone-700" style={{ fontFamily: 'system-ui' }}>{description}</p>
   </div>
 );
