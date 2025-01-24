@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import TextToSpeech from './TextToSpeech';
 
 const ChatModal = ({ 
   isOpen, 
   onClose, 
   characterName = 'AI Assistant',
-  characterImage = '/api/placeholder/100/100',
-  apiEndpoint = 'http://localhost:5000/chat',
+  characterImage = '/api/placeholder/100/100'
 }) => {
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([]);
@@ -15,6 +14,9 @@ const ChatModal = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef(null);
   const chatRef = useRef(null);
+
+  // Initialize Google AI
+  const genAI = new GoogleGenerativeAI("AIzaSyC_U5zMaXs5WikVxsTbcvzajRYlfe4irqw");
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -34,6 +36,30 @@ const ChatModal = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const createConversation = async () => {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    return model.startChat({
+      history: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `You are ${characterName}. Please respond in first-person, describing your thoughts, actions, and historical events as if you were experiencing them. Be engaging, informative, and historically accurate.`,
+            },
+          ],
+        },
+        {
+          role: "model",
+          parts: [
+            {
+              text: `I understand. I shall embody the spirit and voice of ${characterName}, speaking from my experiences.`,
+            },
+          ],
+        },
+      ],
+    });
+  };
+
   const sendMessage = async (e) => {
     e.preventDefault();
     if (!message.trim()) return;
@@ -44,13 +70,13 @@ const ChatModal = ({
     setIsExpanded(true);
 
     try {
-      const response = await axios.post(apiEndpoint, {
-        message: message
-      });
+      const chat = await createConversation();
+      const result = await chat.sendMessage([{ text: message }]);
+      const response = result.response;
 
       const botMessage = {
         sender: characterName,
-        text: response.data.reply
+        text: response.text()
       };
       
       setConversation(prev => [...prev, botMessage]);
@@ -72,30 +98,29 @@ const ChatModal = ({
   return (
     <div 
       ref={chatRef}
-      className="fixed bottom-4 right-4 flex flex-col z-50"
-      style={{ maxWidth: '400px' }}
+      className="fixed bottom-4 right-4 flex flex-col z-50 w-96"
     >
       {/* Chat Messages */}
       {isExpanded && conversation.length > 0 && (
-        <div className="mb-4 p-4 max-h-96 overflow-y-auto rounded-lg bg-white/80 backdrop-blur-sm">
+        <div className="mb-4 p-4 max-h-[70vh] overflow-y-auto rounded-2xl bg-white shadow-lg border border-gray-100">
           {conversation.map((msg, index) => (
             <div 
               key={index} 
-              className={`flex mb-2 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex mb-4 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender !== 'user' && (
                 <img 
                   src={characterImage} 
                   alt={characterName}
-                  className="w-8 h-8 rounded-full mr-2 self-end"
+                  className="w-10 h-10 rounded-full mr-2 self-end shadow-sm border-2 border-gray-100"
                 />
               )}
-              <div className="flex flex-col max-w-[70%]">
+              <div className="flex flex-col max-w-[75%]">
                 <div 
-                  className={`p-3 rounded-2xl ${
+                  className={`p-4 rounded-2xl shadow-sm ${
                     msg.sender === 'user' 
-                      ? 'bg-blue-500 text-white rounded-br-none' 
-                      : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                      ? 'bg-blue-600 text-white rounded-br-none' 
+                      : 'bg-gray-50 text-gray-800 rounded-bl-none'
                   }`}
                 >
                   {msg.text}
@@ -103,7 +128,7 @@ const ChatModal = ({
                     <div className="flex justify-end mt-2">
                       <TextToSpeech 
                         text={msg.text}
-                        className="p-1 bg-transparent hover:bg-gray-200/50 text-black"
+                        className="p-1 hover:bg-gray-200 rounded-full transition-colors"
                       />
                     </div>
                   )}
@@ -116,9 +141,9 @@ const ChatModal = ({
               <img 
                 src={characterImage} 
                 alt={characterName}
-                className="w-8 h-8 rounded-full mr-2 self-end"
+                className="w-10 h-10 rounded-full mr-2 self-end shadow-sm border-2 border-gray-100"
               />
-              <div className="bg-gray-100 text-gray-500 p-3 rounded-2xl rounded-bl-none">
+              <div className="bg-gray-50 text-gray-500 p-4 rounded-2xl rounded-bl-none shadow-sm animate-pulse">
                 Typing...
               </div>
             </div>
@@ -128,27 +153,27 @@ const ChatModal = ({
       )}
 
       {/* Input Form */}
-      <div className="flex items-end">
+      <div className="flex items-end bg-white p-4 rounded-2xl shadow-lg">
         <img 
           src={characterImage} 
           alt={characterName}
-          className="w-20 h-20 cursor-pointer hover:scale-105 transition-transform"
+          className="w-16 h-16 rounded-full cursor-pointer hover:scale-105 transition-transform shadow-md border-2 border-gray-100"
           onClick={() => setIsExpanded(!isExpanded)}
         />
-        <form onSubmit={sendMessage} className="flex-1 ml-2">
+        <form onSubmit={sendMessage} className="flex-1 ml-4">
           <div className="flex gap-2">
             <input
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder={`Talk with ${characterName}...`}
-              className="flex-1 p-3 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={`Chat with ${characterName}...`}
+              className="flex-1 p-4 rounded-full bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
               onClick={() => setIsExpanded(true)}
             />
             <button
               type="submit"
               disabled={isLoading}
-              className="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-4 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

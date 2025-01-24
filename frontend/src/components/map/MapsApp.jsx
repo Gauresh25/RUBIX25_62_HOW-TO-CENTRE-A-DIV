@@ -7,6 +7,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 import eventsData from '../data/historyEvents'
 import FlyToMarker from './FlyToMarker'
 import Filter from './Filter'
+import TextToSpeech from '../TextToSpeech';
 
 // Fix the default icon issue
 let DefaultIcon = L.icon({
@@ -49,10 +50,10 @@ function MapsApp() {
             <div className="map-content">
                 <Filter setSelectedCategory={setSelectedCategory} />
                 <MapContainer 
-                    center={defaultPosition} 
-                    zoom={13} 
+                    center={[28.6139, 77.2090]}
+                    zoom={8} 
                     scrollWheelZoom={true}
-                    className="map-container"
+                    className="map-container w-1/2"
                 >
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -77,16 +78,12 @@ function MapsApp() {
                                             <p className="popup-inner__description">
                                                 {event.description}
                                             </p>
-                                            <button
-                                                className="popup-inner__button"
-                                                onClick={() => handleFavouriteClick(event.id)}
-                                            >
-                                                {favourites.includes(event.id) ? (
-                                                    <span>⭐ Unfavorite</span>
-                                                ) : (
-                                                    <span>☆ Favorite</span>
-                                                )}
-                                            </button>
+                                            <TextToSpeech 
+                                            text={`${event.title}. ${event.description}`}
+                                            voiceGender="female"
+                                            voiceLang="en-US"
+                                            />
+                                            
                                         </div>
                                     </Popup>
                                 )}
@@ -98,26 +95,7 @@ function MapsApp() {
                 </MapContainer>
             </div>
 
-            <div className="liked-events">
-                <h2 className="liked-events__title">
-                    <span>⭐</span> Favourite Events
-                </h2>
-                <ul>
-                    {favourites
-                        .map((id) => eventsData.find((event) => event.id === id))
-                        .map((event) => (
-                            event && (
-                                <li
-                                    key={event.id}
-                                    className="liked-events__event"
-                                    onClick={() => handleListItemClick(event.id)}
-                                >
-                                    <h3>{event.title}</h3>
-                                </li>
-                            )
-                        ))}
-                </ul>
-            </div>
+            
         </div>
     )
 }

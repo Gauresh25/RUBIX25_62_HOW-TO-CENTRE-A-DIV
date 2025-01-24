@@ -31,23 +31,29 @@ const customStyles = `
 `;
 
 const TextCard = ({ title, description, image }) => (
-  <div className="origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
-    <img
-      src={image || "/api/placeholder/400/300"}
-      alt={title}
-      className="w-full h-56 object-cover rounded-lg mb-4"
-    />
-    <div className="flex items-center justify-between mb-2">
-      <h3 className="text-2xl font-koulen text-[#8B4513]">{title}</h3>
-      <TextToSpeech 
-        text={`${title}. ${description}`}
-        voiceGender="female"
-        voiceLang="en-US"
-      />
+  <div className="flex flex-col origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
+    {image && (
+      <div className="flex-none">
+        <img
+          src={image}
+          className="w-full h-56 object-cover rounded-lg"
+        />
+      </div>
+    )}
+    <div className={`flex flex-col ${image ? 'mt-4' : 'mt-0'}`}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-2xl font-koulen text-[#8B4513]">{title}</h3>
+        <TextToSpeech 
+          text={`${title}. ${description}`}
+          voiceGender="female"
+          voiceLang="en-US"
+        />
+      </div>
+      <p className="text-stone-700" style={{ fontFamily: 'system-ui' }}>{description}</p>
     </div>
-    <p className="text-stone-700" style={{ fontFamily: 'system-ui' }}>{description}</p>
   </div>
 );
+
 
 const ThreeDCard = ({ title, modelUrl, caption }) => (
   <div className="origin-left transition-transform duration-300 ease-in-out hover:-translate-y-2">
@@ -121,7 +127,6 @@ const Timeline = ({ timelineData,historicalCharacter  }) => {
           isOpen={true}
           characterName={historicalCharacter.name}
           characterImage={historicalCharacter.image}
-          apiEndpoint="http://localhost:5000/chat"
           className="fixed bottom-4 right-4 z-50"
         />
       )}

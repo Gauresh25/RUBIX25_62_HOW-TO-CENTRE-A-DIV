@@ -141,7 +141,7 @@ const Hero = () => {
             borderRadius: 10,
           }}
           id="image1"
-          className="absolute top-14 left-0"
+          className="absolute top-14 left-0 bg-white/30 backdrop-blur-md shadow-[0_8px_32px_0_rgba(31,38,135,0.37)] p-4"
           src="/logo1.png"
         />
       </div>

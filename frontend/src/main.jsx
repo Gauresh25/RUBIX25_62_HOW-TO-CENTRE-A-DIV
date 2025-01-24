@@ -27,6 +27,8 @@ import Map from "./components/map/MapsApp.jsx";
 import { timelineData } from "./components/data/timelineData";
 import VRMuseumQRCode from "./components/qr.jsx";
 
+import HistoricalFigures from "./components/HistoricalFigures";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
@@ -38,14 +40,7 @@ const router = createBrowserRouter(
       <Route path="/vr-museum" element={<VRMuseumQRCode />} />
       <Route
         path="/chat"
-        element={
-          <Chat
-            isOpen="true"
-            characterName="Rani Lakshmibai"
-            characterImage="RaniLakshmi.png"
-            apiEndpoint="http://localhost:5000/chat"
-          />
-        }
+        element={<HistoricalFigures/>}
       />
       <Route path="/map" element={<Map />} />
       <Route

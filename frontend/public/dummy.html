@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VR Interaction Example</title>
+    <title>VR Audio Interaction</title>
     <style>
       body {
         margin: 0;
@@ -29,10 +29,8 @@
       import * as THREE from "three";
       import { VRButton } from "VRButton";
       import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-      // Scene, Camera, and Renderer
+
       const scene = new THREE.Scene();
-      var cor = [];
-      // Main camera
       const camera = new THREE.PerspectiveCamera(
         70,
         window.innerWidth / window.innerHeight,
@@ -46,24 +44,20 @@
       document.body.appendChild(renderer.domElement);
       document.body.appendChild(VRButton.createButton(renderer));
 
-      // Set the background color to white
       scene.background = new THREE.Color(0xffffff);
 
-      // Lighting
       const light = new THREE.HemisphereLight(0xffffff, 0x444444);
       light.position.set(0, 20, 0);
       scene.add(light);
 
-      // Load a model
+      // Load the model
       const loader = new GLTFLoader();
-      // Path to the .gltf or .glb file
       loader.load(
-        "/jhansi.glb", // Replace with your model URL
+        "/jhansi.glb",
         (gltf) => {
           const model = gltf.scene;
-
-          model.position.set(0, 0, -5); // Adjust the position
-          model.scale.set(100, 100, 100); // Adjust the scale
+          model.position.set(0, 0, -5);
+          model.scale.set(100, 100, 100);
           scene.add(model);
         },
         undefined,
@@ -71,204 +65,158 @@
           console.error("Error loading model:", error);
         }
       );
-      // Create a Cube
-      const geometry = new THREE.BoxGeometry(1, 1, 1);
-      const material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-      const cube = new THREE.Mesh(geometry, material);
-      cube.position.set(0, 1, -3); // Place it in front of the user
-      scene.add(cube);
-      // Function to create a text box
+
+      // Create an invisible target for gaze detection
+      const targetGeometry = new THREE.SphereGeometry(2); // Much larger radius for easier detection
+      const targetMaterial = new THREE.MeshBasicMaterial({ 
+        visible: false // Make it invisible
+      });
+      const target = new THREE.Mesh(targetGeometry, targetMaterial);
+      target.position.set(0, 1.6, -3); // Positioning at typical eye level
+      scene.add(target);
+
+      // Text display functions
       function createTextBox(text) {
-        // Create a canvas element
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
-
-        // Set canvas size
         canvas.width = 512;
         canvas.height = 256;
-
-        // Draw a background for the text box
-        context.fillStyle = "rgba(255, 255, 255, 0.8)"; // Semi-transparent white background
+        context.fillStyle = "rgba(255, 255, 255, 0.8)";
         context.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw the text
-        context.fillStyle = "black"; // Text color
+        context.fillStyle = "black";
         context.font = "36px Arial";
         context.textAlign = "center";
         context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-        // Create a texture from the canvas
         const texture = new THREE.CanvasTexture(canvas);
-
-        // Create a plane geometry for the text box
-        const planeGeometry = new THREE.PlaneGeometry(2, 1); // Width, height of the text box
+        const planeGeometry = new THREE.PlaneGeometry(2, 1);
         const planeMaterial = new THREE.MeshBasicMaterial({
           map: texture,
           transparent: true,
         });
-
-        // Create the mesh and return it
-        const textBox = new THREE.Mesh(planeGeometry, planeMaterial);
-        return textBox;
+        return new THREE.Mesh(planeGeometry, planeMaterial);
       }
 
-      // Create and add the text box to the scene
-      const textBox = createTextBox("Welcome to the VR Scene!");
-      textBox.position.set(0, 2, -2); // Place it in front of the user
-      scene.add(textBox);
+      // Text box removed for cleaner interface
 
-      // Create a dummy camera (used for camera movement reference)
+      // Camera movement setup
       const dolly = new THREE.Object3D();
       dolly.position.z = 0;
       dolly.add(camera);
       scene.add(dolly);
-      // Variable for moving forward and backwar
       const dummyCamera = new THREE.Object3D();
       camera.add(dummyCamera);
+
+      // Text update function
       function updateTextBox(text, textBox) {
-        // Get the material's texture canvas
-        const canvas = textBox.material.map.image; // Access the canvas
+        const canvas = textBox.material.map.image;
         const context = canvas.getContext("2d");
-
-        // Clear the previous content
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw the updated background
-        context.fillStyle = "rgba(255, 255, 255, 0.8)"; // Semi-transparent white background
+        context.fillStyle = "rgba(255, 255, 255, 0.8)";
         context.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Draw the updated text
-        context.fillStyle = "black"; // Text color
+        context.fillStyle = "black";
         context.font = "36px Arial";
         context.textAlign = "center";
         context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-        // Mark the texture as needing an update
         textBox.material.map.needsUpdate = true;
       }
 
+      // Camera movement handler
       function handleCameraMovement() {
         const speed = 0.2;
-
-        // Get the forward direction of the camera
         const forward = new THREE.Vector3();
         camera.getWorldDirection(forward);
-
-        // Get the sideways direction for strafing
         const sideways = new THREE.Vector3();
         sideways.crossVectors(forward, camera.up).normalize();
 
-        // Forward/backward (gamepad axes[1])
         if (gamepad) {
-          const forwardMovement = gamepad.axes[0]; // Typically the Y-axis of the left thumbstick
+          const forwardMovement = gamepad.axes[0];
           if (Math.abs(forwardMovement) > 0.1) {
-            // Move forward/backward based on the direction you're looking
             dolly.position.add(
               forward.clone().multiplyScalar(-forwardMovement * speed)
             );
             updateTextBox(
-              `${Math.floor(dolly.position.x)},${Math.floor(dolly.position.Y)},${
-                Math.floor(dolly.position.z)
-              }`,
+              `Position: ${Math.floor(dolly.position.x)}, ${Math.floor(dolly.position.y)}, ${Math.floor(dolly.position.z)}`,
               textBox
             );
-            // dolly.position.y = 0;
           }
 
-          // Left/right strafing (gamepad axes[0])
-          const sidewaysMovement = gamepad.axes[1]; // Typically the X-axis of the left thumbstick
+          const sidewaysMovement = gamepad.axes[1];
           if (Math.abs(sidewaysMovement) > 0.1) {
-            // Strafe left/right
             dolly.position.add(
               sideways.clone().multiplyScalar(-1 * sidewaysMovement * speed)
             );
             updateTextBox(
-            `${dolly.position.x},${dolly.position.y},${dolly.position.z}`,
-            textBox
+              `Position: ${Math.floor(dolly.position.x)}, ${Math.floor(dolly.position.y)}, ${Math.floor(dolly.position.z)}`,
+              textBox
             );
-
-            // dolly.position.y = 0;
           }
         }
       }
 
-      // Raycaster for interaction (example for gaze-based interaction)
+      // Gaze detection setup
       const raycaster = new THREE.Raycaster();
-      const pointer = new THREE.Vector2(0, 0); // Pointer at the center of the screen
+      const pointer = new THREE.Vector2(0, 0);
       const audio = new Audio("./audio.mp3");
-      var gamepad;
-      // Detect Gaze
+      let isLookingAtTarget = false;
+      
       function checkGaze() {
-        // Set the raycaster to detect gaze
         raycaster.setFromCamera(pointer, camera);
-        const intersects = raycaster.intersectObject(cube);
-
-        // Calculate the distance between the camera (user) and the cube
-        const distance = dolly.position.distanceTo(cube.position);
-        // updateTextBox(distance from cube ${distance}, textBox);
-        // Define a proximity threshold
-        const proximityThreshold = 4; // Adjust the value as needed
+        const intersects = raycaster.intersectObject(target);
+        const distance = dolly.position.distanceTo(target.position);
+        const proximityThreshold = 4;
 
         if (intersects.length > 0 && distance <= proximityThreshold) {
-          // User is looking at the cube and is close enough
-          cube.material.color.set(0x00ff00); // Change color to green on gaze
-          if (audio.paused) {
-            // audio.play();
+          if (!isLookingAtTarget) {
+            isLookingAtTarget = true;
+            if (audio.paused) {
+              audio.play();
+            }
           }
         } else {
-          // User is either not looking at the cube or too far away
-          cube.material.color.set(0xff0000); // Reset color
-          // if (!audio.paused) {
-          //   audio.pause();
-          //   audio.currentTime = 0;
-          // }
-        }
-      }
-      function updateGamepadStatus() {
-        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-
-        if (gamepads) {
-          gamepad = gamepads[0]; // Get the first connected gamepad
-          if (gamepad) {
-            var game = document.getElementById("gamepadStatus");
-            game.textContent = 'Gamepad connected: ${gamepad.id}';
-
-            // Log button presses (0-15 for most controllers)
-            gamepad.buttons.forEach((button, index) => {
-              if (button.pressed) {
-                console.log('Button ${index} pressed');
-              }
-            });
-
-            // Log axis movements (typically 0-1 or -1 to 1 range)
+          if (isLookingAtTarget) {
+            isLookingAtTarget = false;
+            if (!audio.paused) {
+              audio.pause();
+              audio.currentTime = 0;
+            }
           }
         }
+      }
 
+      // Gamepad handling
+      let gamepad;
+      function updateGamepadStatus() {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        if (gamepads) {
+          gamepad = gamepads[0];
+          if (gamepad) {
+            document.getElementById("gamepadStatus").textContent = `Gamepad connected: ${gamepad.id}`;
+          }
+        }
         requestAnimationFrame(updateGamepadStatus);
       }
+
       window.addEventListener("gamepadconnected", (event) => {
-        document.getElementById(
-          "gamepadStatus"
-        ).textContent = 'Gamepad connected: ${event.gamepad.id}';
+        document.getElementById("gamepadStatus").textContent = `Gamepad connected: ${event.gamepad.id}`;
         updateGamepadStatus();
       });
 
       window.addEventListener("gamepaddisconnected", () => {
-        document.getElementById("gamepadStatus").textContent =
-          "No gamepad connected.";
+        document.getElementById("gamepadStatus").textContent = "No gamepad connected.";
       });
-      // Resize Handler
+
+      // Window resize handler
       window.addEventListener("resize", () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
 
-      // Animation Loop
+      // Animation loop
       renderer.setAnimationLoop(() => {
         handleCameraMovement();
-        checkGaze(); // Handle gaze detection
-        renderer.render(scene, camera); // Render the scene with the main camera
+        checkGaze();
+        renderer.render(scene, camera);
       });
     </script>
   </body>

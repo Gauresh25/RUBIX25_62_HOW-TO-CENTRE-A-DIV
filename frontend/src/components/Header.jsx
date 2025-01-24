@@ -53,6 +53,12 @@ const Header = () => {
               <LinkContainer to='/vr-museum'>
                 <Nav.Link>VR Museum</Nav.Link>
               </LinkContainer>
+              <LinkContainer to='/chat'>
+                <Nav.Link>Chat with characters</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to='/map'>
+                <Nav.Link>Interactive map</Nav.Link>
+              </LinkContainer>
               {/* Quizzes & Challenges Dropdown */}
               <NavDropdown title="Quizzes & Challenges" id="quizzes-challenges-dropdown">
                 <LinkContainer to='/quiz'>
