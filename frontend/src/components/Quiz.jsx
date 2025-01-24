@@ -12,6 +12,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "react-toastify";
+// import { Map } from "../assets/Map.jpg";
 
 const indianHistoryQuestions = [
 	{
@@ -249,21 +250,22 @@ export default function HistoryQuiz() {
 
 	if (!genre) {
 		return (
-			<div className="flex items-center justify-center min-h-screen bg-gray-100">
-				<Card className="w-[350px]">
+			<div className="flex items-center justify-center min-h-screen bg-[#DFD7BF] shadow-black ">
+				{/* <img src={Map} /> */}
+				<Card className="w-[500px]">
 					<CardHeader>
 						<CardTitle>Choose a Quiz Genre</CardTitle>
 					</CardHeader>
 					<CardContent className="flex flex-col gap-4">
 						<Button
 							onClick={() => handleGenreSelect("indian")}
-							className="w-full"
+							className="w-full bg-[#3F2305] hover:bg-[#CBA35C]"
 						>
 							Indian History
 						</Button>
 						<Button
 							onClick={() => handleGenreSelect("european")}
-							className="w-full"
+							className="w-full  bg-[#3F2305] hover:bg-[#CBA35C]"
 						>
 							European History
 						</Button>
@@ -275,22 +277,27 @@ export default function HistoryQuiz() {
 
 	if (showResult) {
 		return (
-			<div className="flex items-center justify-center min-h-screen bg-gray-100">
-				<Card className="w-[350px]">
-					<CardHeader>
-						<CardTitle>Quiz Results</CardTitle>
-					</CardHeader>
-					<CardContent>
-						<p className="text-2xl font-bold text-center">
-							Your score: {score} out of {questions.length}
-						</p>
-					</CardContent>
-					<CardFooter>
-						<Button onClick={restartQuiz} className="w-full">
-							Restart Quiz
-						</Button>
-					</CardFooter>
-				</Card>
+			<div>
+				<div className="flex items-center justify-center min-h-screen bg-[#DFD7BF]">
+					<Card className="w-[500px]">
+						<CardHeader>
+							<CardTitle>Quiz Results</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<p className="text-2xl font-bold text-center">
+								Your score: {score} out of {questions.length}
+							</p>
+						</CardContent>
+						<CardFooter>
+							<Button
+								onClick={restartQuiz}
+								className="w-full  bg-[#3F2305] hover:bg-[#CBA35C]"
+							>
+								Restart Quiz
+							</Button>
+						</CardFooter>
+					</Card>
+				</div>
 			</div>
 		);
 	}
@@ -298,8 +305,8 @@ export default function HistoryQuiz() {
 	const question = questions[currentQuestion];
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
-			<Card className="w-[350px]">
+		<div className="flex items-center justify-center min-h-screen bg-[#DFD7BF]">
+			<Card className="w-[500px]">
 				<CardHeader>
 					<CardTitle>
 						{genre === "indian" ? "Indian" : "European"} History Quiz
@@ -327,7 +334,7 @@ export default function HistoryQuiz() {
 					<Button
 						onClick={handleNextQuestion}
 						disabled={selectedAnswer === null}
-						className="w-full"
+						className="w-full  bg-[#3F2305] hover:bg-[#CBA35C]"
 					>
 						{currentQuestion === questions.length - 1 ? "Finish" : "Next"}
 					</Button>

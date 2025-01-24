@@ -25,9 +25,9 @@ const LeaderboardTable = ({ data }) => (
 	<Table>
 		<TableHeader>
 			<TableRow>
-				<TableHead className="w-[100px]">Rank</TableHead>
-				<TableHead>Name</TableHead>
-				<TableHead className="text-right">Score</TableHead>
+				<TableHead className="w-[100px] text-black">Rank</TableHead>
+				<TableHead className="text-black">Name</TableHead>
+				<TableHead className="text-right text-black">Score</TableHead>
 			</TableRow>
 		</TableHeader>
 		<TableBody>
@@ -93,7 +93,7 @@ export default function Leaderboard() {
 	}, []);
 
 	return (
-		<div className="flex flex-row py-20">
+		<div className="flex flex-row py-20 bg-[#DFD7BF]">
 			<Card className="w-full max-w-3xl mx-auto">
 				<CardHeader>
 					<CardTitle className="text-2xl font-bold text-center">
@@ -129,14 +129,14 @@ export default function Leaderboard() {
 						value={activeTab}
 						onValueChange={(value) => setActiveTab(value)}
 					>
-						<TabsList className="grid w-full grid-cols-2">
+						<TabsList className="grid w-full grid-cols-2 bg-[#3F2305]">
 							<TabsTrigger value="indian">Indian</TabsTrigger>
 							<TabsTrigger value="european">European</TabsTrigger>
 						</TabsList>
-						<TabsContent value="indian">
+						<TabsContent value="indian" className="">
 							<LeaderboardTable data={indianData} />
 						</TabsContent>
-						<TabsContent value="european">
+						<TabsContent value="european" className="">
 							<LeaderboardTable data={euorepeanData} />
 						</TabsContent>
 					</Tabs>
